@@ -1,58 +1,35 @@
 @Grab(group='org.nanopub', module='nanopub', version='1.18')
-@Grab(group='org.openrdf.sesame', module='sesame-sail-memory', version='4.1.2')
-@Grab(group='org.openrdf.sesame', module='sesame-repository-sail', version='4.1.2')
-@Grab(group='org.openrdf.sesame', module='sesame-model', version='4.1.2')
-
 
 import org.nanopub.Nanopub;
-import org.nanopub.NanopubImpl;
+import org.nanopub.NanopubCreator;
 import org.nanopub.NanopubUtils;
-import org.nanopub.trusty.MakeTrustyNanopub;
-
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
 import org.openrdf.model.impl.ValueFactoryImpl;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryResult;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.memory.MemoryStore;
+import org.openrdf.rio.RDFFormat;
 
-import org.openrdf.model.vocabulary.RDF;
+factory = ValueFactoryImpl.getInstance()
 
-MemoryStore store = new MemoryStore();
-Repository repo = new SailRepository(store);
-repo.initialize();
+nanopubIRI = "http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np1"
 
-RepositoryConnection con = repo.getConnection();
-
-factory = ValueFactoryImpl.getInstance();
-
-con.add(
-  factory.createURI("http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np1"),
-  RDF.TYPE, Nanopub.NANOPUB_TYPE_URI,
-  factory.createURI("http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np1#head")
+creator = new NanopubCreator(nanopubIRI)
+creator.setAssertionUri(nanopubIRI + "#assertion")
+creator.setProvenanceUri(nanopubIRI + "#provenance")
+creator.setPubinfoUri(nanopubIRI + "#publicationInfo")
+creator.addAssertionStatement(
+  factory.createURI("http://subj"),
+  factory.createURI("http://pred"),
+  factory.createURI("http://obj")
+)
+creator.addAuthor(creator.getOrcidUri("0000-0001-7542-0286"))
+creator.addProvenanceStatement(
+  factory.createURI(nanopubIRI + "#assertion"),
+  factory.createURI("http://pred/p"),
+  factory.createURI("http://obj/p")
 )
 
-prefixes = new ArrayList<String>();
-prefixes.add("np");
-namespaces = new HashMap<String, String>();
-namespaces.put("np", "http://www.nanopub.org/nschema#");
 
-StringBuffer outputBuffer = new StringBuffer();
+trustedPub = creator.finalizeTrustyNanopub()
 
-results = con.getStatements(null, RDF.TYPE, Nanopub.NANOPUB_TYPE_URI);
-while (results.hasNext()) {
-  nextResult = results.next()
-  println nextResult.class.name
-  Resource nanopubId = nextResult.getSubject();
-  println nanopubId.class.name
-  if (nanopubId instanceof IRI) {
-    Nanopub nanopub = new NanopubImpl(repo, nanopubId, prefixes, namespaces);
-    nanopub = MakeTrustyNanopub.transform(nanopub);
-    outputBuffer.append(NanopubUtils.writeToString(nanopub, RDFFormat.TRIG)).append("\n\n");
-  }
-}
+outputBuffer = new StringBuffer();
+outputBuffer.append(NanopubUtils.writeToString(trustedPub, RDFFormat.TRIG)).append("\n\n");
 
 println outputBuffer.toString()
