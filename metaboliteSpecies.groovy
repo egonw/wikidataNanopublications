@@ -8,25 +8,28 @@ import org.openrdf.rio.RDFFormat;
 
 factory = ValueFactoryImpl.getInstance()
 
-nanopubIRI = "http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np1"
+counter = 0
 
-creator = new NanopubCreator(nanopubIRI)
-creator.addAssertionStatement(
-  factory.createURI("http://subj"),
-  factory.createURI("http://pred"),
-  factory.createURI("http://obj")
-)
-creator.addAuthor(creator.getOrcidUri("0000-0001-7542-0286"))
-creator.addProvenanceStatement(
-  creator.getAssertionUri(),
-  factory.createURI("http://pred/p"),
-  factory.createURI("http://obj/p")
-)
+new File("data.tsv").eachLine { line ->
+  counter++
+  nanopubIRI = "http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np" + counter
 
+  creator = new NanopubCreator(nanopubIRI)
+  creator.addAssertionStatement(
+    factory.createURI("http://subj"),
+    factory.createURI("http://pred"),
+    factory.createURI("http://obj")
+  )
+  creator.addCreator(creator.getOrcidUri("0000-0001-7542-0286"))
+  creator.addProvenanceStatement(
+    creator.getAssertionUri(),
+    factory.createURI("http://pred/p"),
+    factory.createURI("http://obj/p")
+  )
 
-trustedPub = creator.finalizeTrustyNanopub()
+  trustedPub = creator.finalizeTrustyNanopub()
 
-outputBuffer = new StringBuffer();
-outputBuffer.append(NanopubUtils.writeToString(trustedPub, RDFFormat.TRIG)).append("\n\n");
-
-println outputBuffer.toString()
+  outputBuffer = new StringBuffer();
+  outputBuffer.append(NanopubUtils.writeToString(trustedPub, RDFFormat.TRIG)).append("\n\n");
+  println outputBuffer.toString()
+}

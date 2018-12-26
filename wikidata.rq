@@ -1,0 +1,6 @@
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT * WHERE {
+  ?metabolite wdt:P31 wd:Q11173 ;
+              wdt:P703 ?taxon .
+}
