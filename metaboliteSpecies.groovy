@@ -11,9 +11,6 @@ factory = ValueFactoryImpl.getInstance()
 nanopubIRI = "http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np1"
 
 creator = new NanopubCreator(nanopubIRI)
-creator.setAssertionUri(nanopubIRI + "#assertion")
-creator.setProvenanceUri(nanopubIRI + "#provenance")
-creator.setPubinfoUri(nanopubIRI + "#publicationInfo")
 creator.addAssertionStatement(
   factory.createURI("http://subj"),
   factory.createURI("http://pred"),
@@ -21,7 +18,7 @@ creator.addAssertionStatement(
 )
 creator.addAuthor(creator.getOrcidUri("0000-0001-7542-0286"))
 creator.addProvenanceStatement(
-  factory.createURI(nanopubIRI + "#assertion"),
+  creator.getAssertionUri(),
   factory.createURI("http://pred/p"),
   factory.createURI("http://obj/p")
 )
