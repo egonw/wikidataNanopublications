@@ -1,6 +1,21 @@
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-SELECT * WHERE {
-  ?metabolite wdt:P31 wd:Q11173 ;
-              wdt:P703 ?taxon .
+SELECT (STR(?metaboliteIRI) AS ?metabolite) ?metaboliteIRILabel 
+       ?inchikey
+       (STR(?taxonIRI) AS ?taxon) ?taxonIRILabel 
+       (STR(?sourceIRI) AS ?source) ?sourceIRILabel
+       ?doi
+WITH {
+  SELECT ?metaboliteIRI ?taxonIRI WHERE {
+    ?metaboliteIRI wdt:P31 wd:Q11173 ;
+                wdt:P703 ?taxonIRI .
+  }
+} AS %DATA WHERE {
+  INCLUDE %DATA
+  OPTIONAL { ?metaboliteIRI wdt:P235 ?inchikey }
+  ?metaboliteIRI ?propp ?statement .
+  wd:P703 wikibase:claim ?propp .
+  ?statement prov:wasDerivedFrom/pr:P248 ?sourceIRI .
+  OPTIONAL { ?sourceIRI wdt:P356 ?doi . }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
