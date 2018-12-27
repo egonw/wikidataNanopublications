@@ -5,6 +5,7 @@ import org.nanopub.NanopubCreator;
 import org.nanopub.NanopubUtils;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.rio.RDFFormat;
 
@@ -32,6 +33,7 @@ new File("data.tsv").eachLine { line ->
   creator.addNamespace("owl", "http://www.w3.org/2002/07/owl#")
   creator.addNamespace("pav", "http://purl.org/pav/")
   creator.addNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#")
+  creator.addNamespace("skos", "http://www.w3.org/2004/02/skos/core#")
 
   metabolite = factory.createURI(fields[0])
   metaboliteName = factory.createLiteral(fields[1].replace("\"","").replace("@en",""), "en")
@@ -59,6 +61,15 @@ new File("data.tsv").eachLine { line ->
       creator.addProvenanceStatement(
         source, OWL.SAMEAS,
         factory.createURI("https://doi.org/" + doiStr)
+      )
+    }
+  }
+  if (fields.length > 8) {
+    taxonMatch = fields[8]
+    if (taxonMatch != null && !taxonMatch.isEmpty()) {
+      creator.addAssertionStatement(
+        taxon, SKOS.EXACT_MATCH,
+        factory.createURI(taxonMatch)
       )
     }
   }

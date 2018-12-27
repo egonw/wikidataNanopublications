@@ -5,6 +5,7 @@ SELECT (STR(?metaboliteIRI) AS ?metabolite) ?metaboliteIRILabel
        (STR(?taxonIRI) AS ?taxon) ?taxonIRILabel 
        (STR(?sourceIRI) AS ?source) ?sourceIRILabel
        ?doi
+       (STR(?taxonMatchIRI) AS ?taxonMatch)
 WITH {
   SELECT ?metaboliteIRI ?taxonIRI WHERE {
     ?metaboliteIRI wdt:P31 wd:Q11173 ;
@@ -17,5 +18,9 @@ WITH {
   wd:P703 wikibase:claim ?propp .
   ?statement prov:wasDerivedFrom/pr:P248 ?sourceIRI .
   OPTIONAL { ?sourceIRI wdt:P356 ?doi . }
+  OPTIONAL { 
+    ?taxonIRI wdt:P2888 ?taxonMatchIRI .
+    FILTER (CONTAINS(STR(?taxonMatchIRI), "NCBITaxon"))
+  }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
