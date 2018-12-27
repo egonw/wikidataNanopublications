@@ -1,6 +1,7 @@
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-SELECT (STR(?metaboliteIRI) AS ?metabolite) ?metaboliteIRILabel 
+SELECT DISTINCT
+       (STR(?metaboliteIRI) AS ?metabolite) ?metaboliteIRILabel
        ?inchikey
        (STR(?taxonIRI) AS ?taxon) ?taxonIRILabel 
        (STR(?sourceIRI) AS ?source) ?sourceIRILabel
@@ -16,7 +17,7 @@ WITH {
   OPTIONAL { ?metaboliteIRI wdt:P235 ?inchikey }
   ?metaboliteIRI ?propp ?statement .
   wd:P703 wikibase:claim ?propp .
-  ?statement prov:wasDerivedFrom/pr:P248 ?sourceIRI .
+  ?statement prov:wasDerivedFrom/(pr:P248|pr:P854) ?sourceIRI .
   OPTIONAL { ?sourceIRI wdt:P356 ?doi . }
   OPTIONAL { 
     ?taxonIRI wdt:P2888 ?taxonMatchIRI .
