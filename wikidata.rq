@@ -24,4 +24,4 @@ WITH {
     FILTER (CONTAINS(STR(?taxonMatchIRI), "NCBITaxon"))
   }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-} ORDER BY ?metaboliteIRI
+} ORDER BY ?metaboliteIRI ?taxonIRILabel ?source
