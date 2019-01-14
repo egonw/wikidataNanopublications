@@ -24,6 +24,7 @@ new File("data.tsv").eachLine { line ->
   nanopubIRI = "http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np" + counter
 
   creator = new NanopubCreator(nanopubIRI)
+  creator.addTimestamp(new Date())
   creator.addNamespace("wd", "http://www.wikidata.org/entity/")
   creator.addNamespace("np", "http://www.nanopub.org/nschema#")
   creator.addNamespace("has-source", "http://semanticscience.org/resource/SIO_000253")
