@@ -21,7 +21,7 @@ new File("data.tsv").eachLine { line ->
   fields = line.split("\t")
   if (fields[0] == "?metabolite") return
   counter++
-  nanopubIRI = "http://www.bigcat.unimaas.nl/nanopubs/wikidata/tmp/np" + counter
+  nanopubIRI = "http://purl.org/nanopub/temp/np" + counter
 
   creator = new NanopubCreator(nanopubIRI)
   creator.addTimestamp(new Date())
