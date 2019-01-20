@@ -35,6 +35,8 @@ new File("data.tsv").eachLine { line ->
   creator.addNamespace("pav", "http://purl.org/pav/")
   creator.addNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#")
   creator.addNamespace("skos", "http://www.w3.org/2004/02/skos/core#")
+  creator.addNamespace("dct", "http://purl.org/dc/terms/")
+  creator.addNamespace("xsd", "http://www.w3.org/2001/XMLSchema#")
 
   metabolite = factory.createURI(fields[0])
   metaboliteName = factory.createLiteral(fields[1].replace("\"","").replace("@en",""), "en")
